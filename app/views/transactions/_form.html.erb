@@ -1,0 +1,83 @@
+<%= form_with(model: transaction, local: true) do |form| %>
+  <% if transaction.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <h2><%= pluralize(transaction.errors.count, "erro") %> impediu esta transação de ser salva:</h2>
+      <ul>
+        <% transaction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :description, "Descrição", class: "form-label" %>
+    <%= form.text_field :description, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :amount, "Valor", class: "form-label" %>
+    <%= form.number_field :amount, step: 0.01, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :transaction_date, "Data", class: "form-label" %>
+    <%= form.date_field :transaction_date, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :account_id, "Conta", class: "form-label" %>
+    <%= form.collection_select :account_id, @accounts, :id, :name, { prompt: "Selecione uma Conta" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :category_id, "Categoria", class: "form-label" %>
+    <%= form.collection_select :category_id, @categories, :id, :name, { prompt: "Selecione uma Categoria" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :transaction_type, "Tipo", class: "form-label" %><br>
+    <%= form.radio_button :transaction_type, "expense", checked: transaction.transaction_type == "expense" || transaction.transaction_type.blank? %> <%= form.label :transaction_type_expense, "Despesa" %>
+    <%= form.radio_button :transaction_type, "income" %> <%= form.label :transaction_type_income, "Receita" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :notes, "Notas", class: "form-label" %>
+    <%= form.text_area :notes, class: "form-control" %>
+  </div>
+
+  <%# O campo "paid" só faz sentido para despesas %>
+  <div class="mb-3" id="paid_field_container" style="<%= transaction.transaction_type == 'income' ? 'display:none;' : '' %>">
+    <%= form.check_box :paid, class: "form-check-input" %>
+    <%= form.label :paid, "Paga?", class: "form-check-label" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Salvar Transação", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    const transactionTypeRadios = document.querySelectorAll('input[name="transaction[transaction_type]"]');
+    const paidFieldContainer = document.getElementById('paid_field_container');
+
+    function togglePaidField() {
+      if (document.querySelector('input[name="transaction[transaction_type]"]:checked').value === 'expense') {
+        paidFieldContainer.style.display = 'block';
+      } else {
+        paidFieldContainer.style.display = 'none';
+      }
+    }
+
+    transactionTypeRadios.forEach(radio => {
+      radio.addEventListener('change', togglePaidField);
+    });
+
+    // Initial check
+    if (paidFieldContainer) { // Ensure the container exists
+        togglePaidField();
+    }
+  });
+</script>
+

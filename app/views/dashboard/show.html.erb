@@ -1,0 +1,60 @@
+<h1>Dashboard</h1>
+
+<div>
+  <h2>Resumo de Despesas por Categoria</h2>
+  <% if @expenses_by_category.present? %>
+    <ul>
+      <% @expenses_by_category.each do |category_name, total_amount| %>
+        <li><%= category_name %>: <%= number_to_currency(total_amount) %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Nenhuma despesa registrada para exibir o resumo por categoria.</p>
+  <% end %>
+</div>
+
+<div>
+  <h2>Despesas Pendentes</h2>
+  <% if @pending_expenses.present? %>
+    <ul>
+      <% @pending_expenses.each do |expense| %>
+        <li>
+          <%= expense.description %> - <%= number_to_currency(expense.amount) %> 
+          (Vencimento: <%= expense.transaction_date.strftime("%d/%m/%Y") %>)
+          <%= link_to "Marcar como Paga", "#" %> <%# Placeholder: Implementar ação para marcar como paga %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Nenhuma despesa pendente.</p>
+  <% end %>
+</div>
+
+<div>
+  <h2>Calendário de Transações (<%= @start_date.strftime("%B %Y") %>)</h2>
+  <%# Placeholder: Esta é uma representação muito simples do calendário %>
+  <%# Uma biblioteca JS como FullCalendar ou similar seria ideal para um calendário interativo %>
+  <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; border: 1px solid #ccc; padding: 10px;">
+    <% @days_in_month.each do |day| %>
+      <div style="border: 1px solid #eee; padding: 5px; min-height: 80px;">
+        <div><%= day.day %></div>
+        <% if @transactions_by_date[day.day] %>
+          <ul style="font-size: 0.8em; padding-left: 10px;">
+            <% @transactions_by_date[day.day].each do |transaction| %>
+              <li style="color: <%= transaction.transaction_type == 'income' ? 'green' : 'red' %>;">
+                <%= transaction.description.truncate(15) %>: <%= number_to_currency(transaction.amount, unit: "") %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%# Adicionar navegação para mês anterior/próximo se necessário %> 
+</div>
+
+<br>
+<%= link_to "Nova Transação", new_transaction_path, class: "btn btn-primary" %>
+<%= link_to "Ver Contas", accounts_path, class: "btn btn-secondary" %>
+<%= link_to "Ver Categorias", categories_path, class: "btn btn-secondary" %>
+

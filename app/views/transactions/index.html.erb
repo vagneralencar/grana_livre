@@ -1,0 +1,66 @@
+<h1>Transações</h1>
+
+<%# Formulário de Filtros %>
+<%= form_with url: transactions_path, method: :get, local: true do |form| %>
+  <div>
+    <%= form.label :month, "Mês:" %>
+    <%= form.select :month, (1..12).map { |m| [Date::MONTHNAMES[m], m] }, selected: params[:month] || Date.today.month %>
+    <%= form.label :year, "Ano:" %>
+    <%= form.select :year, ((Date.today.year - 5)..(Date.today.year + 5)).to_a, selected: params[:year] || Date.today.year %>
+  </div>
+  <div>
+    <%= form.label :type, "Tipo:" %>
+    <%= form.select :type, options_for_select([["Todos", ""], ["Despesa", "expense"], ["Receita", "income"]], params[:type]) %>
+  </div>
+  <div>
+    <%= form.label :account_id, "Conta:" %>
+    <%= form.collection_select :account_id, current_user.accounts.order(:name), :id, :name, { include_blank: "Todas" }, selected: params[:account_id] %>
+  </div>
+  <div>
+    <%= form.label :category_id, "Categoria:" %>
+    <%= form.collection_select :category_id, current_user.categories.order(:name), :id, :name, { include_blank: "Todas" }, selected: params[:category_id] %>
+  </div>
+  <%= form.submit "Filtrar" %>
+  <%= link_to "Limpar Filtros", transactions_path %>
+<% end %>
+
+<br>
+
+<%= link_to "Nova Transação", new_transaction_path, class: "btn btn-primary" %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Descrição</th>
+      <th>Categoria</th>
+      <th>Conta</th>
+      <th>Valor</th>
+      <th>Tipo</th>
+      <th>Paga?</th>
+      <th colspan="3">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.transaction_date.strftime("%d/%m/%Y") %></td>
+        <td><%= transaction.description %></td>
+        <td><%= transaction.category&.name %></td>
+        <td><%= transaction.account&.name %></td>
+        <td style="color: <%= transaction.transaction_type == 'income' ? 'green' : 'red' %>;">
+          <%= number_to_currency(transaction.amount) %>
+        </td>
+        <td><%= transaction.transaction_type.capitalize %></td>
+        <td><%= transaction.paid? ? "Sim" : "Não" if transaction.transaction_type == "expense" %></td>
+        <td><%= link_to "Ver", transaction %></td>
+        <td><%= link_to "Editar", edit_transaction_path(transaction) %></td>
+        <td><%= link_to "Excluir", transaction, data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%# Placeholder para Paginação %>
+<%# <%= paginate @transactions %>
+

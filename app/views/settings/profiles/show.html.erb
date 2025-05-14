@@ -1,0 +1,81 @@
+<% content_for :page_title, "Editar Perfil" %>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-user-edit mr-1"></i>
+          Informações do Perfil
+        </h3>
+      </div>
+      <%= form_with(model: @user, url: settings_profile_path, method: :patch, local: true, class: "form-horizontal") do |form| %>
+        <div class="card-body">
+          <% if @user.errors.any? %>
+            <div id="error_explanation" class="alert alert-danger alert-dismissible">
+              <button type=button class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h5><i class="icon fas fa-ban"></i> <%= pluralize(@user.errors.count, "erro") %> impediu seu perfil de ser salvo:</h5>
+              <ul>
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="form-group row">
+            <%= form.label :name, "Nome", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+              <%= form.text_field :name, class: "form-control" %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <%= form.label :email, "Email", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+              <%= form.email_field :email, class: "form-control", readonly: true %>
+              <small class="form-text text-muted">O e-mail não pode ser alterado.</small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <%= form.label :photo, "Foto do Perfil", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+              <% if @user.photo.attached? %>
+                <div class="mb-2">
+                  <%= image_tag @user.photo.variant(resize_to_limit: [100, 100]), class: "img-thumbnail" %>
+                </div>
+              <% end %>
+              <%= form.file_field :photo, class: "form-control-file" %>
+              <small class="form-text text-muted">Envie uma nova imagem para atualizar sua foto.</small>
+            </div>
+          </div>
+
+          <%# Example for other fields if they were part of the User model and editable here %>
+          <%# <div class="form-group row">
+            <%= form.label :language, "Idioma", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+              <%= form.select :language, options_for_select([["Português", "pt-BR"], ["English", "en"]], @user.language), {}, class: "form-control form-select" %>
+            </div>
+          </div> %>
+          <%# <div class="form-group row">
+            <%= form.label :time_zone, "Fuso Horário", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+              <%= form.time_zone_select :time_zone, nil, { default: @user.time_zone || "Brasilia" }, class: "form-control form-select" %>
+            </div>
+          </div> %>
+          <%# <div class="form-group row">
+            <%= form.label :currency, "Moeda Padrão", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+              <%= form.select :currency, options_for_select([["Real Brasileiro (BRL)", "BRL"], ["Dólar Americano (USD)", "USD"]], @user.currency), {}, class: "form-control form-select" %>
+            </div>
+          </div> %>
+        </div>
+        <div class="card-footer">
+          <%= form.submit "Salvar Alterações", class: "btn btn-primary" %>
+          <%= link_to "Alterar Senha", settings_password_path, class: "btn btn-secondary float-right" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

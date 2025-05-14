@@ -1,0 +1,16 @@
+<h1>Backup de Dados</h1>
+
+<p>Aqui você pode fazer o download de uma cópia de segurança dos seus dados.</p>
+
+<p>O backup incluirá suas informações de usuário (exceto senha), contas, categorias e transações.</p>
+
+<%= button_to "Fazer Backup Agora (JSON)", settings_backup_path, method: :post, format: :json, class: "btn btn-primary" %>
+
+<%# Você pode adicionar opções para outros formatos, como CSV, se implementado no controller %>
+<%# Exemplo:
+<%= button_to "Fazer Backup Agora (CSV)", settings_backup_path(format: :csv), method: :post, class: "btn btn-secondary mt-2" %>
+%>
+
+<hr>
+<%= link_to "Voltar para o Perfil", settings_profile_path, class: "btn btn-light mt-2" %>
+

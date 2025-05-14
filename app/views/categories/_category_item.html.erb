@@ -1,0 +1,21 @@
+<li class="list-group-item" style="padding-left: <%= level * 20 %>px;">
+  <div class="d-flex justify-content-between align-items-center">
+    <span>
+      <%= category.name %>
+      <small class="text-muted">(<%= category.category_type.capitalize %>)</small>
+    </span>
+    <span>
+      <%= link_to "Ver", category_path(category), class: "btn btn-sm btn-info" %>
+      <%= link_to "Editar", edit_category_path(category), class: "btn btn-sm btn-warning" %>
+      <%= link_to "Excluir", category_path(category), data: { turbo_method: :delete, turbo_confirm: "Tem certeza? Se esta categoria tiver subcategorias, elas também serão excluídas. Se tiver transações, a exclusão pode ser impedida." }, class: "btn btn-sm btn-danger" %>
+    </span>
+  </div>
+  <% if category.sub_categories.any? %>
+    <ul class="list-group mt-2">
+      <% category.sub_categories.order(:name).each do |sub_category|
+        render partial: "category_item", locals: { category: sub_category, level: level + 1 }
+      end %>
+    </ul>
+  <% end %>
+</li>
+

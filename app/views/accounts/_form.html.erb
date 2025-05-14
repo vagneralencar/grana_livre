@@ -1,0 +1,37 @@
+<%= form_with(model: account, local: true) do |form| %>
+  <% if account.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <h2><%= pluralize(account.errors.count, "erro") %> impediu esta conta de ser salva:</h2>
+      <ul>
+        <% account.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, "Nome da Conta", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :initial_amount, "Saldo Inicial", class: "form-label" %>
+    <%= form.number_field :initial_amount, step: 0.01, class: "form-control" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= form.check_box :include_in_reports, class: "form-check-input" %>
+    <%= form.label :include_in_reports, "Incluir nos relatórios?", class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= form.check_box :allow_negative_amount, class: "form-check-input" %>
+    <%= form.label :allow_negative_amount, "Permitir saldo negativo?", class: "form-check-label" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Salvar Conta", class: "btn btn-primary" %>
+  </div>
+<% end %>
+

@@ -1,0 +1,60 @@
+<h1><%= @category.name %> (<%= @category.category_type.capitalize %>)</h1>
+
+<% if @category.parent %>
+  <p>
+    <strong>Categoria Pai:</strong>
+    <%= link_to @category.parent.name, category_path(@category.parent) %>
+  </p>
+<% end %>
+
+<hr>
+
+<h2>Subcategorias</h2>
+<% if @category.sub_categories.any? %>
+  <ul class="list-group">
+    <% @category.sub_categories.order(:name).each do |sub_category|
+      render partial: "category_item", locals: { category: sub_category, level: 0 } # Reset level for this list
+    end %>
+  </ul>
+<% else %>
+  <p>Nenhuma subcategoria cadastrada.</p>
+<% end %>
+
+<hr>
+
+<h2>Transações Recentes nesta Categoria</h2>
+<% if @transactions.present? %>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Conta</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.transaction_date.strftime("%d/%m/%Y") %></td>
+          <td><%= link_to transaction.description, transaction_path(transaction) %></td>
+          <td><%= transaction.account&.name %></td>
+          <td style="color: <%= transaction.transaction_type == 'income' ? 'green' : 'red' %>;">
+            <%= number_to_currency(transaction.amount) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @category.transactions.count > @transactions.size %>
+    <%= link_to "Ver todas as transações desta categoria", transactions_path(category_id: @category.id) %>
+  <% end %>
+<% else %>
+  <p>Nenhuma transação registrada para esta categoria.</p>
+<% end %>
+
+<hr>
+
+<%= link_to "Editar Categoria", edit_category_path(@category), class: "btn btn-secondary" %> |
+<%= link_to "Voltar para Categorias", categories_path, class: "btn btn-light" %>
+

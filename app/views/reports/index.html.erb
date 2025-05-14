@@ -1,0 +1,105 @@
+<% content_for :page_title, "Relatórios" %>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-chart-pie mr-1"></i>
+          Gerar Relatório
+        </h3>
+      </div>
+      <%= form_with url: reports_path, method: :get, local: true, class: "p-3" do |form| %>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4 form-group">
+            <%= form.label :report_type, "Tipo de Relatório:", class: "form-label" %>
+            <%= form.select :report_type, 
+                            options_for_select([
+                              ["Despesas por Categoria", "expenses_by_category"],
+                              ["Receitas por Categoria", "income_by_category"],
+                              ["Movimentação de Contas", "account_history"]
+                            ], @report_type), 
+                            {}, 
+                            class: "form-control form-select" %>
+          </div>
+          <div class="col-md-3 form-group">
+            <%= form.label :start_date, "Data Inicial:", class: "form-label" %>
+            <%= form.date_field :start_date, value: @start_date, class: "form-control" %>
+          </div>
+          <div class="col-md-3 form-group">
+            <%= form.label :end_date, "Data Final:", class: "form-label" %>
+            <%= form.date_field :end_date, value: @end_date, class: "form-control" %>
+          </div>
+          <div class="col-md-2 form-group">
+            <%= form.submit "Gerar", class: "btn btn-primary w-100" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% if @report_data.present? || @report_type.present? %>
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Resultado: <%= @report_title %></h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <% if @report_data.present? %>
+          <% case @report_type %>
+          <% when "expenses_by_category", "income_by_category" %>
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th class="text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @report_data.each do |category_name, total_amount| %>
+                  <tr>
+                    <td><%= category_name %></td>
+                    <td class="text-right"><%= number_to_currency(total_amount) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+            <%# Placeholder for chart %>
+            <%# <div class="p-3"> %>
+              <%# <%= pie_chart @report_data, title: @report_title %> %>
+            <%# </div> %>
+          <% when "account_history" %>
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>Conta</th>
+                  <th class="text-right">Total Receitas</th>
+                  <th class="text-right">Total Despesas</th>
+                  <th class="text-right">Saldo no Período</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @report_data.each do |account_name, data| %>
+                  <tr>
+                    <td><%= account_name %></td>
+                    <td class="text-right"><%= number_to_currency(data[:income]) %></td>
+                    <td class="text-right"><%= number_to_currency(data[:expenses]) %></td>
+                    <td class="text-right"><%= number_to_currency(data[:balance_change]) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <p class="p-3">Tipo de relatório não suportado para visualização detalhada.</p>
+          <% end %>
+        <% else %>
+          <p class="p-3">Nenhum dado encontrado para este relatório com os filtros selecionados.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+

@@ -1,0 +1,65 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require admin-lte/dist/css/adminlte.min
+ *= require_tree .
+ *= require_self
+ */
+
+
+/* Calendar specific styles */
+.calendar-day {
+  height: 120px; /* Increased height for better visibility */
+  vertical-align: top;
+  padding: 8px;
+}
+.day-number {
+  font-weight: bold;
+  text-align: right;
+  margin-bottom: 5px;
+}
+.other-month .day-number {
+  color: #aaa;
+}
+.today {
+  background-color: #eaf4ff; /* Lighter blue for today */
+  border: 1px solid #9ec5fe;
+}
+.transactions-on-day {
+  font-size: 0.85em;
+  max-height: 80px; /* Limit height and allow scroll if needed */
+  overflow-y: auto;
+}
+.transaction-indicator {
+  padding: 3px 5px;
+  margin-bottom: 3px;
+  border-radius: 4px;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block; /* Make it block to take full width */
+}
+.transaction-indicator.expense {
+  background-color: #dc3545; /* Red for expenses */
+}
+.transaction-indicator.income {
+  background-color: #28a745; /* Green for income */
+}
+.transaction-link {
+  color: white;
+  text-decoration: none;
+}
+.transaction-link:hover {
+  text-decoration: underline;
+}
+

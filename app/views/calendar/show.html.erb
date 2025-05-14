@@ -1,0 +1,61 @@
+<% content_for :page_title, "Calendário" %>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="far fa-calendar-alt mr-1"></i>
+          Calendário de Transações
+        </h3>
+        <div class="card-tools">
+          <%= link_to calendar_path, class: "btn btn-sm btn-outline-primary mr-2" do %>
+            <i class="fas fa-calendar-day mr-1"></i> Hoje
+          <% end %>
+          <div class="btn-group">
+            <%= link_to calendar_path(date: @today.prev_month), class: "btn btn-sm btn-outline-secondary" do %>
+              <i class="fas fa-chevron-left"></i> Mês Anterior
+            <% end %>
+            <%= link_to calendar_path(date: @today.next_month), class: "btn btn-sm btn-outline-secondary" do %>
+              Próximo Mês <i class="fas fa-chevron-right"></i>
+            <% end %>
+          </div>
+        </div>
+      </div><!-- /.card-header -->
+      <div class="card-body p-0">
+        <div class="text-center p-3">
+          <h2><%= @today.strftime("%B %Y") %></h2>
+        </div>
+        <table class="table table-bordered calendar">
+          <thead>
+            <tr>
+              <% Date::DAYNAMES.rotate(Date.beginning_of_week == :sunday ? 0 : 1).each do |day_name| %>
+                <th scope="col" class="text-center"><%= day_name %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @date_range.each_slice(7) do |week| %>
+              <tr>
+                <% week.each do |day| %>
+                  <td class="calendar-day <%= day.month == @today.month ? "current-month" : "other-month" %> <%= day == Date.today ? "today" : "" %>">
+                    <div class="day-number"><%= day.day %></div>
+                    <div class="transactions-on-day">
+                      <% if @transactions_by_date[day] %>
+                        <% @transactions_by_date[day].each do |transaction| %>
+                          <div class="transaction-indicator <%= transaction.transaction_type %>" title="<%= transaction.description %>: <%= number_to_currency(transaction.amount) %>">
+                            <%= link_to transaction.description.truncate(15), transaction_path(transaction), class: "transaction-link" %>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div><!-- /.card-body -->
+    </div><!-- /.card -->
+  </div>
+</div>

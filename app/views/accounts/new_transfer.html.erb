@@ -1,0 +1,26 @@
+<h1>Realizar Transferência Entre Contas</h1>
+
+<%= form_with url: perform_transfer_accounts_path, method: :post, local: true do |form| %>
+  <div class="mb-3">
+    <%= form.label :from_account_id, "Da Conta:", class: "form-label" %>
+    <%= form.collection_select :from_account_id, @accounts, :id, :name, { prompt: "Selecione a Conta de Origem" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :to_account_id, "Para a Conta:", class: "form-label" %>
+    <%= form.collection_select :to_account_id, @accounts, :id, :name, { prompt: "Selecione a Conta de Destino" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :amount, "Valor da Transferência:", class: "form-label" %>
+    <%= form.number_field :amount, step: 0.01, class: "form-control", required: true, min: 0.01 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Realizar Transferência", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<br>
+<%= link_to "Voltar para Contas", accounts_path, class: "btn btn-light" %>
+

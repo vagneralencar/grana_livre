@@ -1,0 +1,60 @@
+<h1><%= @account.name %></h1>
+
+<p>
+  <strong>Saldo Inicial:</strong>
+  <%= number_to_currency(@account.initial_amount) %>
+</p>
+
+<p>
+  <strong>Saldo Atual:</strong>
+  <%= number_to_currency(@account.current_amount) %>
+</p>
+
+<p>
+  <strong>Incluir em Relatórios:</strong>
+  <%= @account.include_in_reports? ? "Sim" : "Não" %>
+</p>
+
+<p>
+  <strong>Permitir Saldo Negativo:</strong>
+  <%= @account.allow_negative_amount? ? "Sim" : "Não" %>
+</p>
+
+<hr>
+
+<h2>Transações Recentes</h2>
+<% if @transactions.present? %>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.transaction_date.strftime("%d/%m/%Y") %></td>
+          <td><%= link_to transaction.description, transaction_path(transaction) %></td>
+          <td><%= transaction.category&.name %></td>
+          <td style="color: <%= transaction.transaction_type == 'income' ? 'green' : 'red' %>;">
+            <%= number_to_currency(transaction.amount) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @account.transactions.count > @transactions.size %>
+    <%= link_to "Ver todas as transações desta conta", transactions_path(account_id: @account.id) %>
+  <% end %>
+<% else %>
+  <p>Nenhuma transação registrada para esta conta.</p>
+<% end %>
+
+<hr>
+
+<%= link_to "Editar Conta", edit_account_path(@account), class: "btn btn-secondary" %> |
+<%= link_to "Voltar para Contas", accounts_path, class: "btn btn-light" %>
+

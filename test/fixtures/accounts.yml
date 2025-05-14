@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  initial_amount: 9.99
+  current_amount: 9.99
+  include_in_reports: false
+  allow_negative_amount: false
+  user: one
+
+two:
+  name: MyString
+  initial_amount: 9.99
+  current_amount: 9.99
+  include_in_reports: false
+  allow_negative_amount: false
+  user: two

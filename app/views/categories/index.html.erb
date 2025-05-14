@@ -1,0 +1,35 @@
+<h1>Categorias</h1>
+
+<%= link_to "Nova Categoria", new_category_path, class: "btn btn-primary mb-3" %>
+
+<div class="row">
+  <div class="col-md-6">
+    <h2>Categorias de Despesa</h2>
+    <% if @expense_categories.present? %>
+      <ul class="list-group">
+        <% @expense_categories.each do |category|
+          render partial: "category_item", locals: { category: category, level: 0 }
+        end %>
+      </ul>
+    <% else %>
+      <p>Nenhuma categoria de despesa cadastrada.</p>
+    <% end %>
+  </div>
+
+  <div class="col-md-6">
+    <h2>Categorias de Receita</h2>
+    <% if @income_categories.present? %>
+      <ul class="list-group">
+        <% @income_categories.each do |category|
+          render partial: "category_item", locals: { category: category, level: 0 }
+        end %>
+      </ul>
+    <% else %>
+      <p>Nenhuma categoria de receita cadastrada.</p>
+    <% end %>
+  </div>
+</div>
+
+<%# Partial for rendering category items and their sub-categories %>
+<%# Create app/views/categories/_category_item.html.erb %>
+

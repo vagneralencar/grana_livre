@@ -1,0 +1,34 @@
+<h1>Preferências de Notificação</h1>
+
+<%= form_with(model: @user, url: settings_notification_preferences_path, method: :patch, local: true) do |form| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <h2><%= pluralize(@user.errors.count, "erro") %> impediu estas preferências de serem salvas:</h2>
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3 form-check">
+    <%= form.check_box :notify_pending_expenses, class: "form-check-input" %>
+    <%= form.label :notify_pending_expenses, "Notificar-me por e-mail sobre despesas pendentes/próximas do vencimento.", class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= form.check_box :notify_monthly_summary, class: "form-check-input" %>
+    <%= form.label :notify_monthly_summary, "Enviar-me um resumo financeiro mensal por e-mail.", class: "form-check-label" %>
+  </div>
+
+  <%# Adicione mais opções de notificação conforme necessário %>
+
+  <div class="actions">
+    <%= form.submit "Salvar Preferências de Notificação", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<hr>
+<%= link_to "Voltar para o Perfil", settings_profile_path, class: "btn btn-light mt-2" %>
+
